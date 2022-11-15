@@ -1,33 +1,39 @@
-const inputNumber = document.querySelector('#controls>input');
-const buttonCreate = document.querySelector('button[data-create]');
-const buttonDestroy = document.querySelector('button[data-destroy]');
-const boxes = document.querySelector('#boxes');
+const inputText = document.querySelector("#controls input");
+const createBtn = document.querySelector("[data-create]");
+const deleteBtn = document.querySelector("[data-destroy]");
+const boxes = document.querySelector("#boxes");
 
 function getRandomHexColor() {
-	return `#${Math.floor(Math.random() * 16777215).toString(16)}`;
+  return `#${Math.floor(Math.random() * 16777215).toString(16)}`;
 };
 
-const createBoxes = amount => {
-	const elementsToAdd = [];
-	for (let i = 0; i < amount; i += 1) {
-		const div = document.createElement('div');
-		div.style.height = `${30 + 10 * i}px`;
-		div.style.width = `${30 + 10 * i}px`;
-		div.style.background = getRandomHexColor();
-		elementsToAdd.push(div);
-	};
-	return elementsToAdd;
-};
+let sizes = 20;
 
+const createBoxes = () => {
+    const amount = inputText.value;
+    if (amount <= 0 || amount % 1) {
+    return alert(`Bведите целое число, больше или равное 1!`);
+    }
+    for (let i = 1; i <= amount; i += 1) {
+    sizes += 10;
+    const squares = document.createElement("div");
+    squares.classList.add("item");
+    squares.style.cssText = `
+        width: ${sizes}px;
+        height: ${sizes}px;
+        background-color: ${getRandomHexColor()};
+    `;
+    boxes.append(squares);
+    }
+    inputText.value = '';  
+};
 const destroyBoxes = () => {
-	boxes.innerHTML = '';
+    const allsquares = document.querySelectorAll(".item");
+    for (let allsquare of allsquares) {
+    boxes.removeChild(allsquare);
+    }
+    sizes = 20;
+    inputText.value = "";
 };
-
-buttonCreate.addEventListener('click', () => {
-	const boxesToAdd = createBoxes(inputNumber.value);
-	boxes.append(...boxesToAdd);
-});
-
-buttonDestroy.addEventListener('click', () => {
-	destroyBoxes.call();
-});
+createBtn.addEventListener('click', createBoxes);
+deleteBtn.addEventListener("click", destroyBoxes);
